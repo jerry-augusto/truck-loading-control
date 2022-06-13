@@ -1,0 +1,74 @@
+
+Sub Inserir_Carregamento()                                                  'Load Userform
+
+LoadingForm.Show
+
+End Sub
+
+Sub Mail_workbook_Outlook_2()                                               'Create e-mail with file attached
+
+    'Make a copy of the file.
+    Dim wb1 As Workbook
+    Dim wb2 As Workbook
+    Dim TempFilePath As String
+    Dim TempFileName As String
+    Dim FileExtStr As String
+    Dim OutApp As Object
+    Dim OutMail As Object
+
+    Set wb1 = ActiveWorkbook
+    If Val(Application.Version) >= 12 Then
+        If wb1.FileFormat = 51 And wb1.HasVBProject = True Then
+            MsgBox "There is VBA code in this xlsx file. There will" & vbNewLine & _
+                   "be no VBA code in the file you send. Save the" & vbNewLine & _
+                   "file as a macro-enabled (. Xlsm) and then retry the macro.", vbInformation
+            Exit Sub
+        End If
+    End If
+
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+    End With
+
+    
+    'Set file name.
+    TempFilePath = Environ$("temp") & "\"
+    TempFileName = wb1.Name & " " & Format(ActiveSheet.Range("E6"), "dd-mm-yy")
+    FileExtStr = "." & LCase(Right(wb1.Name, _
+                                   Len(wb1.Name) - InStrRev(wb1.Name, ".", , 1)))
+
+    wb1.SaveCopyAs TempFilePath & TempFileName & FileExtStr
+    Set wb2 = Workbooks.Open(TempFilePath & TempFileName & FileExtStr)
+
+    Set OutApp = CreateObject("Outlook.Application")
+    
+    Set OutMail = OutApp.CreateItem(0)
+
+    On Error Resume Next
+    
+   'Set email info as file cells
+    With OutMail
+        .To = ActiveSheet.Range("AE10")
+        .CC = ActiveSheet.Range("AE11")
+        .Subject = ActiveSheet.Range("AE12")
+        .Body = ActiveSheet.Range("AE13")
+        .Attachments.Add wb2.FullName
+        .Display
+    End With
+    On Error GoTo 0
+
+    wb2.Close SaveChanges:=False
+
+    'Delete the file.
+    Kill TempFilePath & TempFileName & FileExtStr
+
+    Set OutMail = Nothing
+    Set OutApp = Nothing
+
+    With Application
+        .ScreenUpdating = True
+        .EnableEvents = True
+    End With
+End Sub
+
