@@ -1,4 +1,4 @@
-**Truck Loading Control** is an Excel tool to control and automate truck loading
+**Truck Loading Control Tool** is an Excel tool to control and automate truck loading
 
 It is basically a spreadsheet with VBA that allow the user to input information about truck loads, generating a clean database for futuredata analysis.
 
