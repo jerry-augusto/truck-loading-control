@@ -1,0 +1,475 @@
+
+Private Sub UserForm_Initialize()                                           'Userform Initialization
+
+Me.ComboBox1.RowSource = "Products"                                         'Set source for ComboBox1
+Me.ComboBox2.RowSource = "Types"                                            'Set source for ComboBox2
+
+    With TextBox1                                                           'Set Date to today
+        .Text = VBA.Format(VBA.Date, "dd/mm/yyyy")
+        .SetFocus
+        .SelStart = 0
+        .SelLength = Len(.Text)
+    End With
+        
+    With TextBox2                                                           'Set Time to now
+        .Text = VBA.Format(Now, "hh:mm")
+        .SetFocus
+        .SelStart = 0
+        .SelLength = Len(.Text)
+    End With
+
+
+
+Call CheckMandatoryFields1                                                  'Run mandatory fields code
+
+ToggleButton1.Enabled = False                                               'Disable Save button
+
+End Sub
+
+Sub CheckMandatoryFields1()                                                 'Set inicial values, disable boxes and set colors
+
+ComboBox2.Value = "-"
+ComboBox2.Enabled = False
+ComboBox2.BackColor = &H8000000F
+
+TextBox4.Value = "-"
+TextBox4.Enabled = False
+TextBox4.BackColor = &H8000000F
+
+TextBox6.Value = "-"
+TextBox6.Enabled = False
+TextBox6.BackColor = &H8000000F
+
+TextBox7.Value = "-"
+TextBox7.Enabled = False
+TextBox7.BackColor = &H8000000F
+
+TextBox8.Value = "-"
+TextBox8.Enabled = False
+TextBox8.BackColor = &H8000000F
+
+TextBox9.Value = "-"
+TextBox9.Enabled = False
+TextBox9.BackColor = &H8000000F
+
+End Sub
+
+Sub CheckMandatoryFields2()                                                 'Check if every field is filled to enable Save button
+
+If TextBox1.Value <> "" And TextBox2.Value <> "" And TextBox3.Value <> "" And TextBox4.Value <> "" And TextBox5.Value <> "" And TextBox6.Value <> "" And TextBox7.Value <> "" And TextBox8.Value <> "" And TextBox9.Value <> "" And ComboBox1.Value <> "" And ComboBox2.Value <> "" Then
+ToggleButton1.Enabled = True
+
+    Else
+        ToggleButton1.Enabled = False
+End If
+
+End Sub
+
+Private Sub ComboBox1_Change()                                              'Any change in ComboBox
+
+Call CheckMandatoryFields1                                                  'Run code to check mandatory fields
+
+If ComboBox1.Value = Sheets("Data Validation").Range("A1").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A4").Value Then      'Enable boxes according to product selection
+
+    ComboBox2.Enabled = True
+    ComboBox2.BackColor = &H80000005
+    ComboBox2.Value = ""
+
+    TextBox6.Enabled = True
+    TextBox6.BackColor = &H80000005
+    TextBox6.Value = ""
+    
+    TextBox7.Enabled = True
+    TextBox7.BackColor = &H80000005
+    TextBox7.Value = ""
+    
+End If
+
+
+If ComboBox1.Value = Sheets("Data Validation").Range("A2").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A3").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A8").Value Then      'Enable boxes according to product selection
+
+    
+    TextBox6.Enabled = True
+    TextBox6.BackColor = &H80000005
+    TextBox6.Value = ""
+    
+    TextBox7.Enabled = True
+    TextBox7.BackColor = &H80000005
+    TextBox7.Value = ""
+    
+End If
+
+If ComboBox1.Value = Sheets("Data Validation").Range("A5").Value Then      'Enable boxes according to product selection
+
+    
+    TextBox6.Enabled = True
+    TextBox6.BackColor = &H80000005
+    TextBox6.Value = ""
+    
+    
+End If
+
+If ComboBox1.Value = Sheets("Data Validation").Range("A7").Value Then      'Enable boxes according to product selection
+
+    
+    TextBox9.Enabled = True
+    TextBox9.BackColor = &H80000005
+    TextBox9.Value = ""
+    
+    TextBox7.Enabled = True
+    TextBox7.BackColor = &H80000005
+    TextBox7.Value = ""
+    
+End If
+
+If ComboBox1.Value = Sheets("Data Validation").Range("A6").Value Then      'Enable boxes according to product selection
+    
+    TextBox8.Enabled = True
+    TextBox8.BackColor = &H80000005
+    TextBox8.Value = ""
+    
+    TextBox6.Enabled = True
+    TextBox6.BackColor = &H80000005
+    TextBox6.Value = ""
+    
+End If
+
+Call CheckMandatoryFields2                                                  'Run code to check mandatory fields
+
+End Sub
+
+Private Sub ComboBox2_Change()                                              'Any change in ComboBox
+
+
+If ComboBox2.Value <> Sheets("Data Validation").Range("B1").Value Then      'Enable amount box if <> bulk
+
+    TextBox4.Enabled = True
+    TextBox4.BackColor = &H80000005
+    TextBox4.Value = ""
+    
+End If
+    
+If ComboBox2.Value = Sheets("Data Validation").Range("B1").Value Then      'Enable amount box if = bulk
+    
+    TextBox4.Enabled = False
+    TextBox4.BackColor = &H8000000F
+    TextBox4.Value = "-"
+
+End If
+
+Call CheckMandatoryFields2                                                  'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox4_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox4.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox4.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox4.Text = VBA.Format(TextBox4.Value, "0")
+        End If
+    End If
+    'Display value in another textbox for testing purposes
+    TextBox4.Text = VBA.Format(TextBox4.Value, "0")
+
+End Sub
+
+Private Sub TextBox5_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox5.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox5.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox5.Text = VBA.Format(TextBox5.Value, "0")
+        End If
+    End If
+    'Display value in another textbox for testing purposes
+    TextBox5.Text = VBA.Format(TextBox5.Value, "0")
+
+End Sub
+
+Private Sub TextBox6_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox6.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox6.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox6.Text = VBA.Format(TextBox6.Value, "0.00")
+        End If
+    End If
+    'Display value in another textbox for testing purposes
+    TextBox6.Text = VBA.Format(TextBox6.Value, "0.00")
+
+End Sub
+
+Private Sub TextBox7_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox7.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox7.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox7.Text = VBA.Format(TextBox7.Value, "0.00")
+        End If
+        If ComboBox1.Value = Sheets("Data Validation").Range("A7").Value Then   'Extra check to see if values are within expected
+            If TextBox7.Text >= Range("N38").Value Then
+                MsgBox "Spec2 should not be less than " & Range("N38").Value
+                Cancel = True
+                TextBox7.Value = ""
+                TextBox7.Text = VBA.Format(TextBox7.Value, "0.00")
+            End If
+        End If
+    End If
+
+    TextBox7.Text = VBA.Format(TextBox7.Value, "0.00")
+
+End Sub
+
+Private Sub TextBox8_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox8.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox8.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox8.Text = VBA.Format(TextBox8.Value, "0.00")
+        End If
+    End If
+
+    TextBox8.Text = VBA.Format(TextBox8.Value, "0.00")
+
+End Sub
+
+Private Sub TextBox9_Exit(ByVal Cancel As MSForms.ReturnBoolean)            'When leaving a textbox
+    If Len(TextBox9.Text) > 0 Then                                          'Check if textbox is not empty
+        If Not IsNumeric(TextBox9.Text) Then                                'Check if only numbers were inserted
+            MsgBox "Only numbers allowed"
+            Cancel = True
+            TextBox9.Text = VBA.Format(TextBox9.Value, "0.00")
+        End If
+        If ComboBox1.Value = Sheets("Data Validation").Range("A7").Value Then   'Extra check to see if values are within expected
+            If TextBox9.Text <= Range("N39").Value Then
+                MsgBox "Spec4 should be over " & Range("N39").Value
+                Cancel = True
+                TextBox9.Value = ""
+                TextBox9.Text = VBA.Format(TextBox9.Value, "0.00")
+            End If
+        End If
+    End If
+
+    TextBox9.Text = VBA.Format(TextBox9.Value, "0.00")
+
+End Sub
+
+Private Sub TextBox1_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox2_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox3_Change()                                               'Any change in TextBox
+
+
+For i = 1 To Len(TextBox3.Value)                                            'Code to only allow numbers and letters as Truck Plate
+    If Mid(TextBox3.Value, i, 1) Like "*[!0-9A-Za-z]*" Then
+        myStr = myStr
+    Else
+        myStr = myStr & Mid(TextBox3.Value, i, 1)
+    End If
+Next
+    
+TextBox3.Value = myStr
+
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+    TextBox3.Text = UCase(TextBox3.Text)                                    'Change Truck Plate to uppercase
+
+End Sub
+
+Private Sub TextBox4_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox5_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox6_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox7_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+    
+    
+End Sub
+
+Private Sub TextBox8_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox9_Change()                                               'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+
+End Sub
+
+Private Sub TextBox10_Change()                                              'Any change in TextBox
+
+    Call CheckMandatoryFields2                                              'Run code to check mandatory fields
+    TextBox10.Text = UCase(TextBox10.Text)                                  'Change Client to uppercase
+End Sub
+
+Private Sub ToggleButton1_Click()                                           'Code to be run when save button is clicked
+
+Dim irow As Long                                                            'Variables to help transcription from UserForm to "Loads" sheet
+Dim WS As Worksheet
+Set WS = Worksheets("Loads")
+
+If ComboBox1.Value <> "" Then                                               'Check if first ComboBox is not empty
+    If ComboBox1.Value = Sheets("Data Validation").Range("A1").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A2").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A3").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A4").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A5").Value Or _
+    ComboBox1.Value = Sheets("Data Validation").Range("A8").Value Then      'Check if first ComboBox equals Product1, 2, 3, 4, 5 or 8
+
+        irow = WS.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0).Row           'Find first empty row in database
+        With WS
+    
+        .Range("D" & irow) = Format(TextBox1.Value, "0")                    'Date to column D as number
+        .Range("E" & irow) = TextBox2.Value                                 'Time to column E
+        .Range("F" & irow) = TextBox3.Value                                 'Plate to column F
+        .Range("G" & irow) = ComboBox1.Value                                'Product to column G
+        .Range("H" & irow) = TextBox10.Value                                'Client to column H
+        
+        End With
+    If ComboBox2.Value = "-" Then                                           'Check if ComboBox 2 is empty
+        
+        With WS
+        .Range("I" & irow) = Sheets("Data Validation").Range("B1").Value    'Bulk to column I
+        End With
+        Else
+        With WS
+        .Range("I" & irow) = ComboBox2.Value                                'Type to column I
+        End With
+    End If
+        With WS
+        .Range("J" & irow) = TextBox4.Value                                 'Amount to column J
+        .Range("K" & irow) = TextBox5.Value                                 'Weight to column K
+        .Range("L" & irow) = CDbl(TextBox6.Value)                           'Spec1 to column L as number
+        .Range("M" & irow) = CDbl(TextBox7.Value)                           'Spec2 to column M
+        .Range("N" & irow) = TextBox8.Value                                 'Spec3 to column N
+        .Range("O" & irow) = TextBox9.Value                                 'Spec4 to column O
+        
+        End With
+        
+        ComboBox2.Value = ""                                                'Set every box to empty after transcription
+        ComboBox1.Value = ""
+        TextBox1.Value = ""
+        TextBox2.Value = ""
+        TextBox3.Value = ""
+        TextBox4.Value = ""
+        TextBox7.Value = ""
+        TextBox8.Value = ""
+        TextBox9.Value = ""
+        TextBox10.Value = ""
+    End If
+    
+    If ComboBox1.Value = Sheets("Data Validation").Range("A6").Value Then   'Check if first ComboBox equals Product6,
+
+        irow = WS.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0).Row           'Find first empty row in database
+        With WS
+    
+        .Range("D" & irow) = Format(TextBox1.Value, "0")                    'Date to column D as number
+        .Range("E" & irow) = TextBox2.Value                                 'Time to column E
+        .Range("F" & irow) = TextBox3.Value                                 'Plate to column F
+        .Range("G" & irow) = ComboBox1.Value                                'Product to column G
+        .Range("H" & irow) = TextBox10.Value                                'Client to column H
+        .Range("I" & irow) = Sheets("Data Validation").Range("B1").Value    'Bulk to column I
+        .Range("J" & irow) = TextBox4.Value                                 'Amount to column J
+        .Range("K" & irow) = TextBox5.Value                                 'Weight to column K
+        .Range("L" & irow) = CDbl(TextBox6.Value)                           'Spec1 to column L as number
+        .Range("M" & irow) = TextBox7.Value                                 'Spec2 to column M
+        .Range("N" & irow) = CDbl(TextBox8.Value)                           'Spec3 to column N as number
+        .Range("O" & irow) = TextBox9.Value                                 'Spec4 to column O
+        
+        End With
+        
+        ComboBox2.Value = ""                                                'Set every box to empty after transcription
+        ComboBox1.Value = ""
+        TextBox1.Value = ""
+        TextBox2.Value = ""
+        TextBox3.Value = ""
+        TextBox4.Value = ""
+        TextBox7.Value = ""
+        TextBox8.Value = ""
+        TextBox9.Value = ""
+        TextBox10.Value = ""
+    End If
+    
+    If ComboBox1.Value = Sheets("Data Validation").Range("A7").Value Then   'Check if first ComboBox equals Product7,
+
+        irow = WS.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0).Row           'Find first empty row in database
+        With WS
+    
+        .Range("D" & irow) = Format(TextBox1.Value, "0")                    'Date to column D as number
+        .Range("E" & irow) = TextBox2.Value                                 'Time to column E
+        .Range("F" & irow) = TextBox3.Value                                 'Plate to column F
+        .Range("G" & irow) = ComboBox1.Value                                'Plate to column F
+        .Range("H" & irow) = TextBox10.Value                                'Client to column H
+        .Range("I" & irow) = Sheets("Data Validation").Range("B1").Value    'Bulk to column I
+        .Range("J" & irow) = TextBox4.Value                                 'Amount to column J
+        .Range("K" & irow) = TextBox5.Value                                 'Weight to column K
+        .Range("L" & irow) = TextBox6.Value                                 'Spec1 to column L
+        .Range("M" & irow) = CDbl(TextBox7.Value)                           'Spec2 to column M as number
+        .Range("N" & irow) = TextBox8.Value                                 'Spec3 to column N
+        .Range("O" & irow) = CDbl(TextBox9.Value)                           'Spec4 to column O as number
+        
+        End With
+        
+        ComboBox2.Value = ""                                                'Set every box to empty after transcription
+        ComboBox1.Value = ""
+        TextBox1.Value = ""
+        TextBox2.Value = ""
+        TextBox3.Value = ""
+        TextBox4.Value = ""
+        TextBox5.Value = ""
+        TextBox6.Value = ""
+        TextBox7.Value = ""
+        TextBox8.Value = ""
+        TextBox9.Value = ""
+        TextBox10.Value = ""
+    End If
+    
+    Worksheets("Loads").Select                                              'Adjust column B formula throughout the column
+    Columns("B:B").Select
+    Selection.EntireColumn.Hidden = False
+    ActiveSheet.Range("B2").Select
+    Selection.Copy
+    Range(Selection, Selection.End(xlDown)).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Columns("B:B").Select
+    Selection.EntireColumn.Hidden = True
+    Worksheets("Daily").Select
+    'ActiveWorkbook.Save                                                     'Save file
+    
+End If
+MsgBox "Data Saved"                                                         'Show message box for user t
+    
+    Unload Me                                                               'Close userform
+    
+End Sub
